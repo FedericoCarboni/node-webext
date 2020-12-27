@@ -1,4 +1,6 @@
-const isWindows = process.platform === 'win32';
+import os from 'os';
+
+const isWindows = os.platform() === 'win32';
 
 // The first two arguments in Node.js are the node executable and the path to the main script.
 const args = process.argv.slice(2);
@@ -12,7 +14,7 @@ const ext = hasParentWindow ? args[1] : arg0;
 
 // Chrome extension ids are formatted as `chrome-extension://haeedinojonedameggoleemhcjfbafdc/`.
 const CHROME_EXTENSION_REGEX = /^chrome-extension:\/\/[a-z]{32}\/$/;
-// WebExtension ids can be formatted as an email (e.g. `extension@example.com`) or as a GUID.
+// Firefox ids can be formatted as an email (e.g. `extension@example.com`) or as a GUID.
 const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 // Borrowed from https://github.com/uuidjs/uuid/blob/master/src/regex.js
 const GUID_REGEX = /^\{[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\}$/;
