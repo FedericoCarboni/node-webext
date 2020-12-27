@@ -19,7 +19,7 @@ const defaultEncode = (text: string) => encoder.encode(text);
 const defaultDecode = (u8: Uint8Array) => decoder.decode(u8);
 
 // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#App_side
-// Messages to be sent to the extension are limited to 1MB
+// Messages sent to the extension are limited to 1MB
 const MAX_OUTGOING_SIZE = 1_000_000;
 // Messages coming from the extension are limited to 4GB
 const MAX_INCOMING_SIZE = 4_000_000_000;
@@ -27,7 +27,7 @@ const MAX_INCOMING_SIZE = 4_000_000_000;
 export interface SendOptions<T> {
   /** A writable stream to override stdout, defaults to `process.stdout`. */
   stdout?: NodeJS.WritableStream;
-  /** Override `JSON.stringify()` */
+  /** Custom stringify function, defaults to `JSON.stringify` */
   stringify?(value: T): string;
   /** Override the default text encoder */
   encode?(text: string): Uint8Array;
@@ -37,8 +37,9 @@ export interface SendOptions<T> {
  * Send a message to the extension.
  * @param message - A message to send to the extension.
  * @param options - Advanced options for more customization, {@link SendOptions}.
- * @throws `TypeError` if `stdout` is not writable, or `RangeError` if the length of the encoded
- * message exceeds `1MB`, {@link https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#App_side}.
+ * @throws `TypeError` if `stdout` is not writable.
+ * @throws `RangeError` if the length of the encoded message exceeds `1MB`,
+ * {@link https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#App_side}.
  */
 export async function send<T = unknown>(message: T, options: SendOptions<T> = {}): Promise<void> {
   const {
@@ -65,11 +66,15 @@ export async function send<T = unknown>(message: T, options: SendOptions<T> = {}
 }
 
 export interface RecvOptions<R> {
-  /** Limit in bytes of the size of the message to receive, defaults to `4GB`. */
+  /**
+   * Limit in bytes of the size of the message, defaults to `4GB`. Since browsers impose a `4GB`
+   * limit, higher values are meaningless.
+   * @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#App_side
+   */
   maxSize?: number;
   /** A readable stream to override stdin, defaults to `process.stdin`. */
   stdin?: NodeJS.ReadableStream;
-  /** Custom parse function, defaults to `JSON.parse()` */
+  /** Custom parse function, defaults to `JSON.parse` */
   parse?(text: string): R;
   /** Override the default text decoder */
   decode?(u8: Uint8Array): string;
@@ -79,6 +84,8 @@ export interface RecvOptions<R> {
  * Receive one message from the extension.
  * @template R The type of the message to receive.
  * @param options - Advanced options, for more customizable behavior {@link RecvOptions}.
+ * @throws `TypeError` if `stdin` is not readable.
+ * @throws `RangeError` if the length of the encoded message is greater than `options.maxSize` {@link RecvOptions}.
  */
 export async function recv<R = unknown>(options: RecvOptions<R> = {}): Promise<R> {
   const {
