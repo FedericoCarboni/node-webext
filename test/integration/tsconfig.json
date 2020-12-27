@@ -1,0 +1,14 @@
+{
+  // "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "esnext",
+    // "rootDir": "./",
+    "allowSyntheticDefaultImports": true,
+    "types": ["node", "mocha", "chai", "chrome"],
+    "paths": {
+      "./index": ["../../src/index"]
+    }
+  },
+  "exclude": []
+}
