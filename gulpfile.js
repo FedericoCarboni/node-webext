@@ -14,7 +14,7 @@ const chromedriver = require('chromedriver');
 const tsTestProject = ts.createProject('test/integration/tsconfig.json');
 const tsProject = ts.createProject('tsconfig.json');
 
-gulp.task('launch', async () => {
+gulp.task('launchChrome', async () => {
   const chromeOptions = new chrome.Options();
   chromeOptions.addArguments(`--load-extension=${path.join(__dirname, 'test/integration/chrome')}`)
   const prefs = new webdriver.logging.Preferences();
@@ -29,7 +29,7 @@ gulp.task('launch', async () => {
   await driver.get('chrome-extension://heonnfeanoemkaemiiapohafcocoapnn/tests.html');
 });
 
-gulp.task('test:integration', gulp.series(function moveMochaAndChai() {
+gulp.task('buildTests', gulp.series(function moveMochaAndChai() {
   return gulp.src([
     'node_modules/mocha/mocha.js',
     'node_modules/mocha/mocha.css',
@@ -47,4 +47,6 @@ gulp.task('test:integration', gulp.series(function moveMochaAndChai() {
     .pipe(tsProject())
     .pipe(header(`#!${process.argv[0]}\n`))
     .pipe(gulp.dest('test/integration/app'));
-}, 'launch'));
+}));
+
+gulp.task('test:chrome', gulp.series('buildTests', 'launchChrome'));

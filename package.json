@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "test:chrome": "gulp test:chrome",
     "test": "jest"
   },
   "repository": {
@@ -19,14 +20,22 @@
   },
   "homepage": "https://github.com/FedericoCarboni/node-webext#readme",
   "devDependencies": {
+    "@rollup/plugin-typescript": "^8.1.0",
+    "@types/chai": "^4.2.14",
+    "@types/chrome": "0.0.127",
     "@types/gulp": "^4.0.7",
+    "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.16",
     "@types/selenium-webdriver": "^4.0.10",
+    "chai": "^4.2.0",
     "chromedriver": "^87.0.4",
     "geckodriver": "^1.21.1",
     "gulp": "^4.0.2",
+    "gulp-header": "^2.0.9",
     "gulp-typescript": "^6.0.0-alpha.1",
     "jest": "^26.6.3",
+    "mocha": "^8.2.1",
+    "rollup": "^2.35.1",
     "selenium-webdriver": "^4.0.0-alpha.8",
     "ts-jest": "^26.4.4",
     "tslib": "^2.0.3",
