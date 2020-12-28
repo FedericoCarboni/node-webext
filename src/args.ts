@@ -1,6 +1,6 @@
-import os from 'os';
+import { platform } from 'os';
 
-const isWindows = os.platform() === 'win32';
+const isWindows = platform() === 'win32';
 
 // The first two arguments in Node.js are the node executable and the path to the main script.
 const args = process.argv.slice(2);
