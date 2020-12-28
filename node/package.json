@@ -1,8 +1,13 @@
 {
   "name": "node-webext",
   "version": "0.1.0",
-  "description": "",
-  "main": "",
+  "description": "A browser extension native messaging library for Node.js and Deno",
+  "main": "lib/lib.js",
+  "types": "lib/lib.d.ts",
+  "exports": {
+    "import": "./lib/lib.mjs",
+    "require": "./lib/lib.js"
+  },
   "scripts": {
     "test": "jest"
   },
