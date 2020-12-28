@@ -13,14 +13,17 @@
     "url": "git+https://github.com/FedericoCarboni/node-webext.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Federico Carboni",
+    "email": "fr3ddydev@gmail.com"
+  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/FedericoCarboni/node-webext/issues"
   },
   "homepage": "https://github.com/FedericoCarboni/node-webext#readme",
   "devDependencies": {
-    "@rollup/plugin-typescript": "^8.1.0",
+    "@rollup/plugin-typescript": "^8.0.0",
     "@types/chai": "^4.2.14",
     "@types/chrome": "0.0.127",
     "@types/gulp": "^4.0.7",
@@ -32,6 +35,7 @@
     "geckodriver": "^1.21.1",
     "gulp": "^4.0.2",
     "gulp-header": "^2.0.9",
+    "gulp-rename": "^2.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "jest": "^26.6.3",
     "mocha": "^8.2.1",
