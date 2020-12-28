@@ -1,0 +1,31 @@
+{
+  "name": "node-webext",
+  "version": "0.1.0",
+  "description": "",
+  "main": "",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FedericoCarboni/node-webext.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Federico Carboni",
+    "email": "fr3ddydev@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FedericoCarboni/node-webext/issues"
+  },
+  "homepage": "https://github.com/FedericoCarboni/node-webext#readme",
+  "devDependencies": {
+    "@rollup/plugin-inject": "^4.0.2",
+    "@rollup/plugin-typescript": "^8.1.0",
+    "@types/node": "^14.14.16",
+    "estree-walker": "^2.0.2",
+    "magic-string": "^0.25.7",
+    "rollup": "^2.35.1",
+    "tslib": "^2.0.3",
+    "typescript": "^4.1.3"
+  }
+}
