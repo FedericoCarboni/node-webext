@@ -11,8 +11,6 @@ const isLittleEndian = (() => {
 })();
 
 // Some default values
-const processStdin = process.stdin;
-const processStdout = process.stdout;
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 const defaultEncode = (text: string) => encoder.encode(text);
@@ -35,6 +33,7 @@ export interface SendOptions<T> {
 
 /**
  * Send a message to the extension.
+ * @template T The type of the message to send.
  * @param message - A message to send to the extension.
  * @param options - Advanced options for more customization, {@link SendOptions}.
  * @throws `TypeError` if `stdout` is not writable.
@@ -44,7 +43,7 @@ export interface SendOptions<T> {
 export async function send<T = unknown>(message: T, options: SendOptions<T> = {}): Promise<void> {
   const {
     stringify = JSON.stringify,
-    stdout = processStdout,
+    stdout = process.stdout,
     encode = defaultEncode,
   } = options;
 
@@ -91,7 +90,7 @@ export async function recv<R = unknown>(options: RecvOptions<R> = {}): Promise<R
   const {
     maxSize = MAX_INCOMING_SIZE,
     parse = JSON.parse,
-    stdin = processStdin,
+    stdin = process.stdin,
     decode = defaultDecode,
   } = options;
 
