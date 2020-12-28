@@ -1,9 +1,9 @@
-import { platform } from 'os';
+// Copyright (c) 2020 Federico Carboni, MIT license
 
-const isWindows = platform() === 'win32';
+const isWindows = Deno.build.os === 'windows';
 
 // The first two arguments in Node.js are the node executable and the path to the main script.
-const args = process.argv.slice(2);
+const args = Deno.args;
 const arg0 = args[0];
 
 // Chrome <54 on Windows passes the origin as the second argument,

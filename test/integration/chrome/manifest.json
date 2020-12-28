@@ -1,7 +1,0 @@
-{
-  "name": "webext-test",
-  "version": "1.0.0",
-  "manifest_version": 2,
-  "permissions": ["nativeMessaging"],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'"
-}

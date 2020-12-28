@@ -1,6 +1,6 @@
-// Streams read() is limited to 1GiB
+// Streams read() has a hard limit of 1GiB
 // https://nodejs.org/api/stream.html#stream_readable_read_size
-const SIZE_LIMIT = 1024 * 1024 * 1024;
+const NODEJS_READ_LIMIT = 1073741824;
 
 /**
  * Read a specified number of bytes from a stream.
@@ -8,16 +8,16 @@ const SIZE_LIMIT = 1024 * 1024 * 1024;
  * @param size - The number of bytes to read.
  * @internal
  */
-export const read = (readable: NodeJS.ReadableStream, size: number) => new Promise<Uint8Array>((resolve) => {
+export const _read = (readable: NodeJS.ReadableStream, size: number) => new Promise<Uint8Array>((resolve) => {
   let onReadable: () => void;
-  if (size > SIZE_LIMIT) {
+  if (size > NODEJS_READ_LIMIT) {
     // More than 1GiB is to be read.
     let currentSize = size;
     const chunks: Uint8Array[] = [];
     onReadable = () => {
       // Read the stream in chunks.
       while (currentSize !== 0) {
-        const readSize = currentSize > SIZE_LIMIT ? SIZE_LIMIT : currentSize;
+        const readSize = currentSize > NODEJS_READ_LIMIT ? NODEJS_READ_LIMIT : currentSize;
         const u8 = readable.read(readSize) as Uint8Array;
         if (u8 !== null) {
           chunks.push(u8);
@@ -48,7 +48,7 @@ export const read = (readable: NodeJS.ReadableStream, size: number) => new Promi
  * @param u8 - The data to write.
  * @internal
  */
-export const write = (writable: NodeJS.WritableStream, u8: Uint8Array) => new Promise<void>((resolve, reject) => {
+export const _write = (writable: NodeJS.WritableStream, u8: Uint8Array) => new Promise<void>((resolve, reject) => {
   writable.write(u8, (err) => {
     if (err) {
       reject(err);
