@@ -2,7 +2,7 @@
 
 import { _read, _write } from './_util.ts';
 
-// The native messaging protocol requires to use the native endianness for the.
+// The native messaging protocol requires to use the native endianness for the message length header.
 // https://developer.chrome.com/docs/apps/nativeMessaging/#native-messaging-host-protocol
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView#Endianness
 const isLittleEndian = (() => {
@@ -11,7 +11,7 @@ const isLittleEndian = (() => {
   return new Int16Array(buffer)[0] === 256;
 })();
 
-// Some default values
+// Default text encoders and decoders
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 const defaultEncode = (text: string) => encoder.encode(text);
@@ -41,11 +41,7 @@ export interface SendOptions<T> {
  * {@link https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#App_side}.
  */
 export async function send<T = unknown>(message: T, options: SendOptions<T> = {}): Promise<void> {
-  const {
-    stringify = JSON.stringify,
-    stdout = Deno.stdout,
-    encode = defaultEncode,
-  } = options;
+  const { stringify = JSON.stringify, stdout = Deno.stdout, encode = defaultEncode } = options;
 
   const u8 = encode(stringify(message));
 
@@ -64,7 +60,7 @@ export async function send<T = unknown>(message: T, options: SendOptions<T> = {}
 export interface RecvOptions<R> {
   /**
    * Limit in bytes of the size of the message, defaults to `4GB`. Since browsers impose a `4GB`
-   * limit, higher values are meaningless.
+   * limit, higher values are meaningless, this option can be used to impose a stricter size limit.
    * @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#App_side
    */
   maxSize?: number;
@@ -94,7 +90,7 @@ export async function recv<R = unknown>(options: RecvOptions<R> = {}): Promise<R
   const size = new DataView(sizeU8.buffer).getUint32(0, isLittleEndian);
 
   if (size > maxSize)
-    throw new RangeError(`Cannot read message, size limit (${maxSize} bytes) exceeded `);
+    throw new RangeError(`Cannot read message, size limit (${maxSize} bytes) exceeded`);
 
   const u8 = await _read(stdin, size);
   return parse(decode(u8));
