@@ -1,2 +1,3 @@
 export { isNativeMessaging, isChrome, extension } from './args';
-export { SendOptions, RecvOptions, send, recv } from './io';
+export { send, recv } from './io';
+export type { SendOptions, RecvOptions } from './io';

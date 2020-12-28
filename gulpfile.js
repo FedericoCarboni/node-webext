@@ -6,6 +6,8 @@ const fs = require('fs');
 
 const gulp = require('gulp');
 const header = require('gulp-header');
+const rename = require('gulp-rename');
+const replace = require('gulp-replace')
 const ts = require('gulp-typescript');
 
 const rollup = require('rollup');
@@ -82,5 +84,24 @@ gulp.task('build', async () => {
 });
 
 gulp.task('build:deno', () => {
-  return gulp.src(['src/**/*.ts', '!src/util.ts']);
-})
+  return gulp.src(['src/**/*.ts', '!src/util.ts'])
+    .pipe(rename((path) => path.basename === 'index' ? {
+      dirname: path.dirname,
+      basename: 'mod',
+      extname: path.extname,
+    } : undefined))
+    .pipe(replace(/\.\/io|\.\/args/g, (match) => `${match}.ts`))
+    .pipe(replace(/import { (.*?) } from '(util|os|\.\/util)';\n/g, ''))
+    .pipe(replace(/platform\(\) === 'win32'/g, 'Deno.build.os === \'windows\''))
+    .pipe(replace(/process\.argv\.slice\(2\)/g, 'Deno.args'))
+    .pipe(replace(/process\./g, 'Deno.'))
+    .pipe(replace(/NodeJS\.ReadableStream/g, 'Deno.Reader'))
+    .pipe(replace(/NodeJS\.WritableStream/g, 'Deno.Writer'))
+    .pipe(replace(/await write\(stdout, /g, 'await stdout.write('))
+    .pipe(header('// Deno build\n'))
+    .pipe(header('// Copyright (c) 2020 Federico Carboni, MIT license\n'))
+    .pipe(header(`<% if (filename.endsWith('io.ts')) { %>
+const read = async (reader: Deno.Reader, size: number) => { const u8 = new Uint8Array(size); await reader.read(u8); return u8; };
+<% } %>`))
+    .pipe(gulp.dest('deno'));
+});
